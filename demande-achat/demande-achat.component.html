@@ -1,0 +1,398 @@
+<div style="padding: 20px 20px 1px;">
+  <div class="content-header">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="header-section">
+          <h1>Commandes</h1>
+        </div>
+      </div>
+      <div class="col-sm-6 hidden-xs">
+        <div class="header-section">
+          <ul class="breadcrumb breadcrumb-top">
+            <li>Commandes</li>
+            <li><a href="">Demande Achat</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="page-content" style="padding-top: 0px; opacity: 1;" [style.height.px]="calculatedPageHeight">
+  <div class="block full" style="border: 1px solid; border-color: rgb(146, 139, 139);">
+    <div class="block-title themed-background-dark mb-0" style="margin-bottom: 0px;">
+      <h3 style="margin-left: -10px; text-transform: initial; margin-top: -3px;color: white;">
+        <strong>Mes demandes d'achat</strong>
+      </h3>
+    </div>
+    <table id="first-table" datatable [dtOptions]="dtOptions" class="row-border hover mt-0">
+      <thead>
+        <tr>
+          <th class="text-center">N° demande d'achat</th>
+          <th class="text-center">Date de création</th>
+          <th class="text-center">Date prévue livraison</th>
+          <th class="text-center">Statut</th>
+          <th class="text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody style="font-size: 10px;" *ngFor="let demande of this.tabDemande ; let i = index;">
+        <tr>
+          <td class="text-center">Demande N°{{demande.id}}</td>
+          <td class="text-center"> aujourd'hui</td>
+          <td class="text-center"> {{demande.date}}</td>
+          <td class="text-center"> traité</td>
+          <td class="text-center">
+            <div class="widget-extra-full" style="display: inline-block;">
+              <button class="btn btn-default themed-background-dark buton" data-toggle="modal" data-target="#viewrangement">
+                <i class="fa fa-eye font"></i>
+              </button>&nbsp;&nbsp;
+              <button class="btn btn-default themed-background-dark buton" (click)="elementCourant(demande)" data-toggle="modal" data-target="#editDemande">
+                <i class="fa fa-pencil font"></i>
+              </button>&nbsp;&nbsp;
+              <button (click)="deleteDemande(demande, i)" data-toggle="tooltip" class="btn btn-danger buton">
+                <i class="fa fa-trash font"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="row">
+      <div class="block pieds">
+        <button class="btn btn-default ajout" data-toggle="modal" data-target="#nouvelleDemande">
+          <i class="fa fa-clone" style="font-size: 15px; margin-top: 3px; color: rgb(117, 9, 9);"></i>&nbsp;&nbsp;
+        <span><strong>Nouvelle demande</strong></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- DEBUT VIEW RANGEMENT -->
+<div class="modal fade" id="viewrangement" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document" style="margin-top: -50px;">
+    <div class="modal-content">
+      <div class="modal-header  border-0" style="height: 30px; text-align: center; margin-top: -15px; margin-left: -15px; margin-right: -15px; background-color: #C3C3C3;">
+        <h6 style="color: black; margin-top: -8px!important; text-align: center; ">
+          <strong>DEMANDE D'ACHAT N° {{currentElement?.id}}</strong>
+        </h6>
+        <button type="button" style="color: black; margin-top: -35px;" class="close themed-color-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="block-title" style="margin-top: 0px; background-color: black; margin-right: -15px;">
+          <div class="col-md-10" style="text-align: left; background-color: black;">
+            <label style="margin-left: -10px; text-transform: uppercase; color: white; font-size: 10px;">
+              <strong>Nom de la société </strong>
+            </label>
+          </div>
+          <div class="col-md-2" style="background-color: black; text-align: right! important;">
+            <label style="margin-left: -30px; text-transform: uppercase; color: white; font-size: 10px;">
+              <strong>{{currentElement?.date}} </strong>
+            </label>
+          </div>
+        </div>
+        <div class="row" style=" text-align: right! important; margin-right: -5px;">
+          <label style="margin-left: -60px; font-size: 10px; color: black;">
+            <strong>Fournisseur proposé : {{currentElement?.fournisseur}}</strong>
+          </label>
+        </div>
+        <div class="row" style="margin-right: -33px; margin-bottom: -20px;">
+          <div class="col-md-6" style="margin-left: -18px;">
+            <div class="widget widget-hover-effect" style="background-color: rgb(151, 150, 150);">
+              <div class="widget-extra">
+                <label style="margin-bottom: 10px; color: white; margin-top: 5px; font-size: 10px;">DEMANDEUR </label><br>
+                <hr class="hr">
+                <label style="color: black; font-size: 10px;">Emetteur de la demande : </label><br>
+                <label style="color: black; font-size: 10px;">Service de l'émetteur : </label><br>
+                <label style="color: black; font-size: 10px;">Imputation : {{currentElement?.imputation}}</label><br>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6" style="padding-right: 0px;">
+            <div class="widget widget-hover-effect" style="background-color: rgb(151, 150, 150)">
+              <div class="widget-extra">
+                <label style="margin-bottom: 10px; color: white; margin-top: 5px; font-size: 10px;">LIVRAISON </label><br>
+                <hr class="hr">
+                <label style="color: black; font-size: 10px;">Contact lors de la livraison : {{currentElement?.contact}}</label><br>
+                <label style="color: black; font-size: 10px;">Lieu de livraison : {{currentElement?.lieu}}</label><br>
+                <label style="color: black; font-size: 10px;">
+                  Date de livraison souhaitée : {{currentElement?.date}}</label><br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-right: -15px; margin-left: -19px; margin-bottom: 15px;">
+          <table id="modal" datatable [dtOptions]="dtOptionModal" class="row-border hover" style="border: 1px solid; border-color: rgb(146, 139, 139); font-size: 10px;">
+            <thead class="themed-background-dark" style="color: white;">
+              <tr>
+                <th class="text-center">Réf.</th>
+                <th class="text-center">Désignation</th>
+                <th class="text-center">Unité</th>
+                <th class="text-center">Quantité</th>
+              </tr>
+            </thead>
+            <tbody *ngFor="let element of currentElement?.article">
+              <tr>
+                <td class="text-center"> {{element?.reference}} </td>
+                <td class="text-center"> {{element?.designation}} </td>
+                <td class="text-center"> {{element?.unite}} </td>
+                <td class="text-center"> {{element?.quantite}} </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row" style="text-align: left; margin-left: -19px; font-size: 10px; margin-bottom: 15px;">
+          <label>
+            <strong>Motif : </strong><br>
+            <strong>{{currentElement?.motif}} </strong>
+          </label><br>
+        </div>
+        <div class="row" style="margin-right: -15px; margin-left: -19px; font-size: 10px; margin-bottom: 20px;">
+          <div class="col-md-4">
+            <label>Demandeur</label>
+          </div>
+          <div class="col-md-4">
+            <label>Responsable entité</label>
+          </div>
+          <div class="col-md-4">
+            <label>Directeur Général Adjoint</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- FIN MODIFIER RANGEMENT -->
+
+<!-- DEBUT NOUVELLE DEMANDE -->
+<div class="modal fade" id="nouvelleDemande" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="margin-top:-50px;">
+    <div class="modal-content">
+      <div class="modal-header  border-0" style="height: 30px; text-align: center; margin-top: -15px; margin-left: -15px; margin-right: -15px; background-color: #C3C3C3;">
+        <h6 style="color: black; margin-top: -8px!important; text-align: center; ">
+          <strong>DEMANDE DEMANDE D'ACHAT</strong>
+        </h6>
+        <button type="button" style="color: black; margin-top: -35px;" class="close themed-color-white" id="fermerModal" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" [formGroup]="myArticle">
+          <div class="row" style="margin-bottom: 10px; font-size: 10px;">
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+              <div class="form-groupe">
+                <label class="control-label" style="float:left;">Contact lors de la livraison</label>
+                <input type="text" placeholder="Nom" class="form-control" formControlName="contact">
+                <input type="hidden" class="form-control" formControlName="id" value="{{this.tabDemande.length+1}}">
+              </div>
+              <div class="form-groupe" style="margin-top: 5%;">
+                <label class="control-label" style="float:left;">Lieu de livraison</label>
+                <input type="text" placeholder="Lieu" class="form-control" formControlName="lieu">
+              </div>
+              <div class="form-groupe" style="margin-top: 5%;">
+                <label class="control-label" style="float:left;">Fournisseur proposé</label>
+                <input type="text" placeholder="Fournisseur" class="form-control" formControlName="fournisseur">
+              </div>
+            </div>
+            <div class="col-md-5">
+              <div class="form-groupe">
+                <label class="control-label" style="float:left;">Date de livraison souhaitée</label>
+                <input type="datetime-local" placeholder="Date" class="form-control" formControlName="date">
+              </div>
+              <div class="form-groupe" style="margin-top: 5%;">
+                <label class="control-label" style="float:left;">Imputation</label>
+                <input type="text" placeholder="Imputation" class="form-control" formControlName="imputation">
+              </div>
+              <div class="form-groupe" style="margin-top: 5%;">
+                <label class="control-label " style="float:left;">Motif</label>
+                <textarea class="form-control" style="border: 1px solid; border-color: #4F0B02;" placeholder="Motif" formControlName="motif"></textarea>
+              </div>
+            </div>
+            <div class="col-md-1"></div>
+          </div>
+        <div>
+        <div class="row" formArrayName="article" *ngFor="let item of myArticle.get('article')['controls']; let i = index;">
+          <div [formGroupName]="i">
+            <div class="themed-background-dark mb-0" style="margin-bottom: 0px;">
+              <div class="row" style="background-color: #4F0B02; color: white; height:25px; margin-left: -20px; margin-right:-20px;">
+                <div class="col-md-10" style="text-align: left; margin-right: -10px;">
+                  <label style="margin-left: -10px; text-transform: uppercase; color: white; font-size: 10px;">
+                    <a  (click)="deleteArticle(i)" style="margin-left: 9px;">
+                      <i class="fa fa-trash font" style="padding-top: 5px;"></i>
+                    </a>&nbsp;&nbsp;
+                    <strong>article N°{{i}}</strong>
+                  </label>
+                </div>
+                <div class="col-md-2" style="text-align: right! important; margin-left: -10px;">
+                  <a style=" color:white; font-size:20px; margin-top:3px;" (click)="isCollapsed1 = !isCollapsed1" [attr.aria-expanded]="!isCollapsed1" data-toggle="collapse" href="#{{i}}" aria-expanded="false">
+                    <i class="fa f-car" [ngClass]="{'fa-caret-down': isCollapsed1, 'fa-caret-left': !isCollapsed1}"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col collapse container-fluid" id="{{i}}" style="font-size: 10px;margin-left: -20px; margin-right: -20px;">
+              <div class="row container-fluid" style="margin-bottom: 9px;">
+                <div class="col-md-4">
+                  <div class="form-groupe" style="margin-top: 5%;">
+                    <label class="control-label" style="float:left;">Réference</label>
+                    <input type="text" placeholder="Réference" class="form-control" ngDefaultControl formControlName="reference" style="background: #C3C3C3;">
+                  </div>
+                  <div class="form-groupe" style="margin-top: 5%;">
+                    <label class="control-label" style="float:left;">Quantité</label>
+                    <input type="text" placeholder="Quantité" class="form-control" ngDefaultControl formControlName="quantite">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-groupe" style="margin-top: 5%;">
+                    <label class="control-label" style="float:left;">Désignation</label>
+                    <select class="form-control" ngDefaultControl formControlName="designation" style="padding-top: 1px;">
+                      <option value="Désignation 1">Désignation 1</option>
+                      <option value="Désignation 2">Désignation 2</option>
+                      <option value="Désignation 3">Désignation 3</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-groupe" style="margin-top: 5%;">
+                    <label class="control-label" style="float:left;">Unité</label>
+                    <input type="text" placeholder="Unité" class="form-control" ngDefaultControl formControlName="unite" style="background: #C3C3C3;">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bordure"></div>
+      <div class="text-center">
+        <button (click)="addArticles()" style="color: #4F0B02 ; background-color: transparent; border: none; margin-top: 6px; font-size: 10px;" type="button ">
+          <i style="color:white; background:#4F0B02;" class="fa fa-plus "></i> Ajouter un article
+        </button>
+      </div>
+      <div class="bordure"></div>
+      <div class="row mt-2" style="margin-bottom:2px; text-align: center; padding-bottom: 10px;">
+        <button type="submit" class="btn themed-background-dark border-0" (click)="addDemande()" style="color: #ebf2f2; margin-top: 13px; margin-bottom: -20px; font-size: 10px;">
+          <b>Soumettre</b>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+</div>
+<!-- FIN NOUVELLE DEMANDE -->
+
+<!-- DEBUT MODIFIER DEMANDE -->
+<div class="modal fade" id="editDemande" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="margin-top:-50px;">
+        <div class="modal-content">
+            <div class="modal-header  border-0" style="height: 30px; text-align: center; margin-top: -15px; margin-left: -15px; margin-right: -15px; background-color: #C3C3C3;">
+                <h6 style="color: black; margin-top: -8px!important; text-align: center; ">
+                    <strong>MODIFIER DEMANDE D'ACHAT</strong>
+                </h6>
+                <button type="button" style="color: black; margin-top: -35px;" class="close themed-color-white" id="hideEditdemande" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" [formGroup]="renameArticle">
+                    <div class="row" style="margin-bottom: 10px; font-size: 10px;">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5">
+                            <div class="form-groupe">
+                                <label class="control-label" style="float:left;">Contact lors de la livraison</label>
+                                <input type="text" class="form-control" value="{{this.currentElement?.contact}}" formControlName="contact">
+                            </div>
+                            <div class="form-groupe" style="margin-top: 5%;">
+                                <label class="control-label" style="float:left;">Lieu de livraison</label>
+                                <input type="text" class="form-control" value="{{this.currentElement?.lieu}}" formControlName="lieu">
+                            </div>
+                            <div class="form-groupe" style="margin-top: 5%;">
+                                <label class="control-label" style="float:left;">Fournisseur proposé</label>
+                                <input type="text" class="form-control" value="{{this.currentElement?.fournisseur}}" formControlName="fournisseur">
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-groupe">
+                                <label class="control-label" style="float:left;">Date de livraison souhaitée</label>
+                                <input type="datetime-local" class="form-control" value="{{this.currentElement?.date}}" formControlName="date">
+                            </div>
+                            <div class="form-groupe" style="margin-top: 5%;">
+                                <label class="control-label" style="float:left;">Imputation</label>
+                                <input type="text" class="form-control" value="{{this.currentElement?.imputation}}" formControlName="imputation">
+                            </div>
+                            <div class="form-groupe" style="margin-top: 5%;">
+                                <label class="control-label " style="float:left;">Motif</label>
+                                <textarea class="form-control" style="border: 1px solid; border-color: #4F0B02;" value="{{this.currentElement?.motif}}" formControlName="motif"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div>
+                        <div class="row" formArrayName="article" *ngFor="let item of this.currentElement?.article; let i = index;">
+                            <div formGroupName="{{i}}">
+                                <div class="themed-background-dark mb-0" style="margin-bottom: 0px;">
+                                    <div class="row" style="background-color: #4F0B02; color: white; height:25px; margin-left: -20px; margin-right:-20px;">
+                                        <div class="col-md-10" style="text-align: left; margin-right: -10px;">
+                                            <label style="margin-left: -10px; text-transform: uppercase; color: white; font-size: 10px;">
+                                            <!-- <a style="margin-left: 9px;">
+                                                <i class="fa fa-trash font" style="padding-top: 5px;"></i>
+                                            </a>&nbsp;&nbsp; -->
+                                            <strong> {{item?.reference}}</strong>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-2" style="text-align: right! important; margin-left: -10px;">
+                                            <a style=" color:white; font-size:20px; margin-top:3px;" (click)="isCollapsed1 = !isCollapsed1" [attr.aria-expanded]="!isCollapsed1" data-toggle="collapse" href="#{{item.reference}}" aria-expanded="false">
+                                                <i class="fa f-car" [ngClass]="{'fa-caret-down': isCollapsed1, 'fa-caret-left': !isCollapsed1}"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col collapse container-fluid" id="{{item.reference}}" style="font-size: 10px;margin-left: -20px;
+                                    margin-right: -20px;">
+                                    <div class="row container-fluid" style="margin-bottom: 9px;">
+                                        <div class="col-md-4">
+                                            <div class="form-groupe" style="margin-top: 5%;">
+                                                <label class="control-label" style="float:left;">Réference</label>
+                                                <input type="text" value="{{item?.reference}}" class="form-control" formControlName="reference" style="background: #C3C3C3;">
+                                            </div>
+                                            <div class="form-groupe" style="margin-top: 5%;">
+                                                <label class="control-label" style="float:left;">Quantité</label>
+                                                <input type="text" value="{{item?.quantite}}" class="form-control" formControlName="quantite">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-groupe" style="margin-top: 5%;">
+                                                <label class="control-label" style="float:left;">Désignation</label>
+                                                <select class="form-control" value="{{item?.designation}}" formControlName="designation" style="padding-top: 1px;">
+                                                <option value="Désignation 1">Désignation 1</option>
+                                                <option value="Désignation 2">Désignation 2</option>
+                                                <option value="Désignation 3">Désignation 3</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-groupe" style="margin-top: 5%;">
+                                                <label class="control-label" style="float:left;">Unité</label>
+                                                <input type="text" value="{{item?.unite}}" class="form-control" formControlName="unite" style="background: #C3C3C3;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bordure"></div>
+                    <div class="bordure"></div>
+                    <div class="row mt-2" style="margin-bottom:2px; text-align: center; padding-bottom: 10px;">
+                        <button type="submit" class="btn themed-background-dark border-0" (click)="editDemande()" style="color: #ebf2f2; margin-top: 13px; margin-bottom: -20px; font-size: 10px;">
+                        <b>Valider</b>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FIN MODIFIER DEMANDE -->
